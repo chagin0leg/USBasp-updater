@@ -27,11 +27,11 @@ class ComponentWidget extends StatefulWidget {
   final Function(bool, bool, String) onStateChange;
 
   const ComponentWidget({
-    Key? key,
+    super.key,
     required this.componentName,
     required this.downloadUrl,
     required this.onStateChange,
-  }) : super(key: key);
+  });
 
   @override
   ComponentWidgetState createState() => ComponentWidgetState();
