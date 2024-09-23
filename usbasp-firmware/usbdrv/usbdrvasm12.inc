@@ -47,7 +47,7 @@ USB_INTR_VECTOR:
 ;----------------------------------------------------------------------------
 ;sync byte (D-) pattern LSb to MSb: 01010100 [1 = idle = J, 0 = K]
 ;sync up with J to K edge during sync pattern -- use fastest possible loops
-;The first part waits at most 1 bit long since we must be in sync pattern.
+;The first part "../../usbasp-firmware-v1.13/usbdrv"waits at most 1 bit long since we must be in sync pattern.
 ;YL is guarenteed to be < 0x80 because I flag is clear. When we jump to
 ;waitForJ, ensure that this prerequisite is met.
 waitForJ:
