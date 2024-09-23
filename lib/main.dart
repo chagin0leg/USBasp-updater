@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_portable_app/dependencies.dart';
-import 'package:my_portable_app/update.dart';
+import 'package:usbasp_updater/dependencies.dart';
+import 'package:usbasp_updater/update.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
