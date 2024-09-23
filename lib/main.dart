@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   _MyAppState createState() => _MyAppState();
 }
@@ -57,7 +59,7 @@ class _MyAppState extends State<MyApp> {
                     if (index == 2) avrgcc = path;
                   },
                 );
-              }).toList(),
+              }),
               UploadWidget(
                   isReady: allComponentsReady,
                   usbasp: usbasp,

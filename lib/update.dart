@@ -12,12 +12,11 @@ class UploadWidget extends StatefulWidget {
   final String avrdude;
   final String avrgcc;
   const UploadWidget(
-      {Key? key,
+      {super.key,
       required this.isReady,
       required this.usbasp,
       required this.avrdude,
-      required this.avrgcc})
-      : super(key: key);
+      required this.avrgcc});
   @override
   UploadWidgetState createState() => UploadWidgetState();
 }
@@ -162,8 +161,8 @@ class UploadWidgetState extends State<UploadWidget> {
     comFlags += ['-mmcu=atmega8', '-DF_CPU=12000000', serialDef];
     comFlags += ['-I$path/usbdrv', '-I$path', serialLenDefine];
 
-    final String avrGcc = await findFile("avr-gcc.exe", toolchain);
-    final String avrObj = await findFile("avr-objcopy.exe", toolchain);
+    final String avrGcc = findFile("avr-gcc.exe", toolchain);
+    final String avrObj = findFile("avr-objcopy.exe", toolchain);
 
     Logger().i('Step 1: Compiling all project files...');
     List<String> projectFiles = ['isp.c', 'clock.c', 'tpi.S', 'serialnumber.c'];
@@ -212,8 +211,9 @@ class UploadWidgetState extends State<UploadWidget> {
 
   Future<bool> runProcess(List<String> command, String action) async {
     var result = await Process.run(command.first, command.skip(1).toList());
-    if (result.stderr.isNotEmpty)
+    if (result.stderr.isNotEmpty) {
       Logger().e('Error during $action: ${result.stderr}');
+    }
     return result.stderr.isEmpty;
   }
 
