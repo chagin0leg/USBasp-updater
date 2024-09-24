@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="windows-1252"?>
 <>
   <InputFile>..\build\windows\x64\runner\Release\USBasp-updater.exe</InputFile>
-  <OutputFile>..\deploy\USBasp-updater.exe</OutputFile>
+  <OutputFile>..\deploy\USBasp updater.exe</OutputFile>
   <Files>
     <Enabled>True</Enabled>
     <DeleteExtractedOnExit>False</DeleteExtractedOnExit>
@@ -159,48 +159,6 @@
                   </File>
                   <File>
                     <Type>3</Type>
-                    <Name>packages</Name>
-                    <Action>0</Action>
-                    <OverwriteDateTime>False</OverwriteDateTime>
-                    <OverwriteAttributes>False</OverwriteAttributes>
-                    <HideFromDialogs>0</HideFromDialogs>
-                    <Files>
-                      <File>
-                        <Type>3</Type>
-                        <Name>cupertino_icons</Name>
-                        <Action>0</Action>
-                        <OverwriteDateTime>False</OverwriteDateTime>
-                        <OverwriteAttributes>False</OverwriteAttributes>
-                        <HideFromDialogs>0</HideFromDialogs>
-                        <Files>
-                          <File>
-                            <Type>3</Type>
-                            <Name>assets</Name>
-                            <Action>0</Action>
-                            <OverwriteDateTime>False</OverwriteDateTime>
-                            <OverwriteAttributes>False</OverwriteAttributes>
-                            <HideFromDialogs>0</HideFromDialogs>
-                            <Files>
-                              <File>
-                                <Type>2</Type>
-                                <Name>CupertinoIcons.ttf</Name>
-                                <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\packages\cupertino_icons\assets\CupertinoIcons.ttf</File>
-                                <ActiveX>False</ActiveX>
-                                <ActiveXInstall>False</ActiveXInstall>
-                                <Action>0</Action>
-                                <OverwriteDateTime>False</OverwriteDateTime>
-                                <OverwriteAttributes>False</OverwriteAttributes>
-                                <PassCommandLine>False</PassCommandLine>
-                                <HideFromDialogs>0</HideFromDialogs>
-                              </File>
-                            </Files>
-                          </File>
-                        </Files>
-                      </File>
-                    </Files>
-                  </File>
-                  <File>
-                    <Type>3</Type>
                     <Name>shaders</Name>
                     <Action>0</Action>
                     <OverwriteDateTime>False</OverwriteDateTime>
@@ -251,7 +209,7 @@
           </File>
           <File>
             <Type>2</Type>
-            <Name>USBasp_update.exe</Name>
+            <Name>USBasp-updater.exe</Name>
             <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\USBasp-updater.exe</File>
             <ActiveX>False</ActiveX>
             <ActiveXInstall>False</ActiveXInstall>
@@ -314,7 +272,7 @@
     <Enabled>False</Enabled>
   </Packaging>
   <Options>
-    <ShareVirtualSystem>False</ShareVirtualSystem>
+    <ShareVirtualSystem>True</ShareVirtualSystem>
     <MapExecutableWithTemporaryFile>True</MapExecutableWithTemporaryFile>
     <TemporaryFileMask/>
     <AllowRunningOfVirtualExeFiles>True</AllowRunningOfVirtualExeFiles>

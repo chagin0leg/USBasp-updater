@@ -44,3 +44,4 @@ app.*.map.json
 pubspec.lock
 *temporary/
 *.map
+deploy/USBasp-updater.exe
