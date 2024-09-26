@@ -56,8 +56,16 @@ void main(List<String> args) {
   final parser = ArgParser();
   parser.addOption('xml', abbr: 'x', defaultsTo: defaultXmlFilePath, help: 'Path to the XML file.');
   parser.addOption('dir', abbr: 'd', defaultsTo: defaultReleaseDir, help: 'Path to the release directory.');
+  parser.addFlag('help', abbr: 'h', help: 'Display help information.');
 
   final results = parser.parse(args);
+
+  if (results['help'] as bool) {
+    print('Usage: dart update_evb.dart [options]');
+    print(parser.usage);
+    return;
+  }
+
   final xmlFilePath = results['xml'] as String;
   final releaseDir = results['dir'] as String;
 

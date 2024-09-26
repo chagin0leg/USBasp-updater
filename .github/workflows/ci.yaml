@@ -28,10 +28,10 @@ jobs:
       run: tree /F /A
 
     - name: Run Dart script
-      run: dart .\deploy\update_evb.dart -dir .\build\windows\x64\runner\Release -xml .\deploy\USBasp-updater.evb
+      run: dart .\deploy\update_evb.dart --dir=".\\build\\windows\\x64\\runner\\Release" --xml=".\\deploy\\USBasp-updater.evb"
 
     - name: Run Enigma VB Console
-      run: .\deploy\enigmavbconsole.exe .\deploy\USBasp-updater.evb
+      run: .\deploy\enigmavbconsole.exe ".\\deploy\\USBasp-updater.evb"
 
     - name: Create Release
       id: create_release
