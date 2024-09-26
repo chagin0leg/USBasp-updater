@@ -16,8 +16,11 @@ jobs:
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: 'stable'
+        flutter-version: '3.24.3'
         cache: true
+        run: |
+          chmod +x "$GITHUB_ACTION_PATH/setup.sh"
+          "$GITHUB_ACTION_PATH/setup.sh" -p -v
 
     - name: Build Flutter Windows Release
       run: flutter build windows --release
