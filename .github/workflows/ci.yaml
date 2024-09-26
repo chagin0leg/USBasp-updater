@@ -1,0 +1,63 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Cache Flutter SDK
+      uses: actions/cache@v3
+      with:
+        path: ~/flutter
+        key: flutter-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}-${{ hashFiles('flutter-version') }}
+        restore-keys: |
+          flutter-${{ runner.os }}-
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.3'
+
+    - name: Cache pub dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.pub-cache
+        key: pub-cache-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}
+        restore-keys: |
+          pub-cache-${{ runner.os }}-
+
+    - name: Build Flutter Windows Release
+      run: flutter build windows --release
+
+    - name: Run Dart script
+      run: dart .\deploy\update_evb.dart --dir=".\\build\\windows\\x64\\runner\\Release" --xml=".\\deploy\\USBasp-updater.evb"
+
+    - name: Run Enigma VB Console
+      run: .\deploy\enigmavbconsole.exe ".\\deploy\\USBasp-updater.evb"
+
+    - name: Display project file tree
+      run: tree /F /A
+
+    - name: Check if file exists
+      run: test -f ./deploy/usbasp_updater_win_x64.exe
+
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: ${{ github.ref_name }}
+        files: "./deploy/usbasp_updater_win_x64.exe"
+        body: |
+          - Windows x64: [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

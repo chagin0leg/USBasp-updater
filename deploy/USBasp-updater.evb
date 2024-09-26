@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="windows-1252"?>
+<?xml version="1.0" encoding="windows-1252"?>
 <>
   <InputFile>..\build\windows\x64\runner\Release\USBasp-updater.exe</InputFile>
-  <OutputFile>..\deploy\USBasp updater.exe</OutputFile>
+  <OutputFile>..\deploy\usbasp_updater_win_x64.exe</OutputFile>
   <Files>
     <Enabled>True</Enabled>
     <DeleteExtractedOnExit>False</DeleteExtractedOnExit>
@@ -26,7 +26,7 @@
               <File>
                 <Type>2</Type>
                 <Name>app.so</Name>
-                <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\app.so</File>
+                <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\app.so</File>
                 <ActiveX>False</ActiveX>
                 <ActiveXInstall>False</ActiveXInstall>
                 <Action>0</Action>
@@ -46,7 +46,7 @@
                   <File>
                     <Type>2</Type>
                     <Name>AssetManifest.bin</Name>
-                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\AssetManifest.bin</File>
+                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\AssetManifest.bin</File>
                     <ActiveX>False</ActiveX>
                     <ActiveXInstall>False</ActiveXInstall>
                     <Action>0</Action>
@@ -58,7 +58,7 @@
                   <File>
                     <Type>2</Type>
                     <Name>AssetManifest.json</Name>
-                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\AssetManifest.json</File>
+                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\AssetManifest.json</File>
                     <ActiveX>False</ActiveX>
                     <ActiveXInstall>False</ActiveXInstall>
                     <Action>0</Action>
@@ -86,7 +86,7 @@
                           <File>
                             <Type>2</Type>
                             <Name>couriernew.ttf</Name>
-                            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\assets\fonts\couriernew.ttf</File>
+                            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\assets\fonts\couriernew.ttf</File>
                             <ActiveX>False</ActiveX>
                             <ActiveXInstall>False</ActiveXInstall>
                             <Action>0</Action>
@@ -98,7 +98,7 @@
                           <File>
                             <Type>2</Type>
                             <Name>RobotoMono-Regular.ttf</Name>
-                            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\assets\fonts\RobotoMono-Regular.ttf</File>
+                            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\assets\fonts\RobotoMono-Regular.ttf</File>
                             <ActiveX>False</ActiveX>
                             <ActiveXInstall>False</ActiveXInstall>
                             <Action>0</Action>
@@ -114,7 +114,7 @@
                   <File>
                     <Type>2</Type>
                     <Name>FontManifest.json</Name>
-                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\FontManifest.json</File>
+                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\FontManifest.json</File>
                     <ActiveX>False</ActiveX>
                     <ActiveXInstall>False</ActiveXInstall>
                     <Action>0</Action>
@@ -134,7 +134,7 @@
                       <File>
                         <Type>2</Type>
                         <Name>MaterialIcons-Regular.otf</Name>
-                        <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\fonts\MaterialIcons-Regular.otf</File>
+                        <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\fonts\MaterialIcons-Regular.otf</File>
                         <ActiveX>False</ActiveX>
                         <ActiveXInstall>False</ActiveXInstall>
                         <Action>0</Action>
@@ -148,7 +148,7 @@
                   <File>
                     <Type>2</Type>
                     <Name>NOTICES.Z</Name>
-                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\NOTICES.Z</File>
+                    <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\NOTICES.Z</File>
                     <ActiveX>False</ActiveX>
                     <ActiveXInstall>False</ActiveXInstall>
                     <Action>0</Action>
@@ -168,7 +168,7 @@
                       <File>
                         <Type>2</Type>
                         <Name>ink_sparkle.frag</Name>
-                        <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\flutter_assets\shaders\ink_sparkle.frag</File>
+                        <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\flutter_assets\shaders\ink_sparkle.frag</File>
                         <ActiveX>False</ActiveX>
                         <ActiveXInstall>False</ActiveXInstall>
                         <Action>0</Action>
@@ -184,7 +184,7 @@
               <File>
                 <Type>2</Type>
                 <Name>icudtl.dat</Name>
-                <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\data\icudtl.dat</File>
+                <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\data\icudtl.dat</File>
                 <ActiveX>False</ActiveX>
                 <ActiveXInstall>False</ActiveXInstall>
                 <Action>0</Action>
@@ -198,7 +198,7 @@
           <File>
             <Type>2</Type>
             <Name>flutter_windows.dll</Name>
-            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\flutter_windows.dll</File>
+            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\flutter_windows.dll</File>
             <ActiveX>False</ActiveX>
             <ActiveXInstall>False</ActiveXInstall>
             <Action>0</Action>
@@ -210,7 +210,7 @@
           <File>
             <Type>2</Type>
             <Name>USBasp-updater.exe</Name>
-            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\build\windows\x64\runner\Release\USBasp-updater.exe</File>
+            <File>C:\Users\chagi\Desktop\HOBBY\USBasp-updater\\build\\windows\\x64\\runner\\Release\USBasp-updater.exe</File>
             <ActiveX>False</ActiveX>
             <ActiveXInstall>False</ActiveXInstall>
             <Action>0</Action>
