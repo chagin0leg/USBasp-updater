@@ -33,11 +33,23 @@ jobs:
     - name: Run Enigma VB Console
       run: .\deploy\enigmavbconsole.exe ".\\deploy\\USBasp-updater.evb"
 
+    - name: Get commit messages
+      id: get_commits
+      run: |
+        git fetch --tags
+        PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^)
+        COMMITS=$(git log ${PREVIOUS_TAG}..HEAD --pretty=format:"* %s")
+        echo "::set-output name=commits::$COMMITS"
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref }}
-        files: ".\\deploy\\USBasp-updater.evb"
+        name: ${{ github.ref | split('/')[-1] }}
+        body: |
+          Commits in this release:
+          ${{ steps.get_commits.outputs.commits }}
+        files: ".\\deploy\\USBasp-updater.exe"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
