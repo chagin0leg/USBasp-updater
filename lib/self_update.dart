@@ -13,7 +13,7 @@ Future<void> downloadLatestVersion() async {
   final response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 200) {
-    final oldFile = '${Platform.resolvedExecutable}.exe';
+    final oldFile = Platform.resolvedExecutable;
     final tempDir = (await getTemporaryDirectory()).path;
     final newFile = File('$tempDir\\${path.basename(url)}');
     final batFile = File('${tempDir}\\update_version.bat');
