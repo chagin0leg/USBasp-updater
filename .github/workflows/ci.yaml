@@ -25,6 +25,9 @@ jobs:
     - name: Build Flutter Windows Release
       run: flutter build windows --release
 
+    - name: Display project file tree
+      run: tree . --noreport
+
     - name: Run Dart script
       run: dart .\deploy\update_evb.dart
 

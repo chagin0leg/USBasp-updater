@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:xml/xml.dart';
+import 'package:args/args.dart';
 
-const String releaseDir = '../build/windows/x64/runner/Release';
-const String xmlFilePath = 'USBasp-updater.evb';
+const String defaultReleaseDir = '../build/windows/x64/runner/Release';
+const String defaultXmlFilePath = 'USBasp-updater.evb';
 
 XmlNode createFileNode(File file) {
+  print('Creating file node for: ${file.absolute.path}');
   final fileNode = XmlBuilder();
   fileNode.element('Type', nest: '2');
   fileNode.element('Name', nest: file.uri.pathSegments.last);
@@ -23,6 +25,7 @@ XmlNode createFileNode(File file) {
 }
 
 XmlNode createDirNode(Directory dir, {String? name}) {
+  print('Creating directory node for: ${dir.absolute.path}');
   final pathSegments = dir.uri.pathSegments;
   final dirName = name != null
       ? name
@@ -31,6 +34,7 @@ XmlNode createDirNode(Directory dir, {String? name}) {
           : pathSegments[pathSegments.length - 2];
 
   final files = dir.listSync(recursive: false);
+  print('Found ${files.length} items in directory: $dirName');
 
   final fileNode = XmlBuilder();
   fileNode.element('Type', nest: '3');
@@ -48,8 +52,24 @@ XmlNode createDirNode(Directory dir, {String? name}) {
   return fileNode.buildFragment();
 }
 
-void main() {
+void main(List<String> args) {
+  final parser = ArgParser();
+  parser.addOption('xml', abbr: 'x', defaultsTo: defaultXmlFilePath, help: 'Path to the XML file.');
+  parser.addOption('dir', abbr: 'd', defaultsTo: defaultReleaseDir, help: 'Path to the release directory.');
+
+  final results = parser.parse(args);
+  final xmlFilePath = results['xml'] as String;
+  final releaseDir = results['dir'] as String;
+
+  print('Starting XML processing with XML file: $xmlFilePath and release directory: $releaseDir');
+
   final xmlFile = File(xmlFilePath);
+  
+  if (!xmlFile.existsSync()) {
+    print('Error: XML file not found at $xmlFilePath');
+    return;
+  }
+
   final document = XmlDocument.parse(xmlFile
       .readAsStringSync()
       .replaceAll(r'<>', '<root>')
@@ -61,20 +81,24 @@ void main() {
   });
 
   if (mainFilesNode != null) {
+    print('Processing main files node...');
     final filesNode = mainFilesNode.findElements('Files').first;
     filesNode.children.clear();
 
     final release = Directory(releaseDir);
-    // filesNode.children.add(createDirNode(release, name: '%DEFAULT FOLDER%'));
-
+    print('Creating directory node for release directory...');
+    
     final fileNode = XmlBuilder();
     fileNode.element('File',
         nest: createDirNode(release, name: '%DEFAULT FOLDER%'));
     filesNode.children.add(fileNode.buildFragment());
   }
+
+  print('Writing updated XML to file...');
   xmlFile.writeAsStringSync(document
       .toXmlString(pretty: true)
       .replaceAll('<root>', '<>')
       .replaceAll('</root>', '</>\n')
       .replaceAll('\n', '\r\n'));
+  print('XML processing completed.');
 }
