@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:usbasp_updater/dependencies.dart';
 import 'package:usbasp_updater/update.dart';
+import 'package:usbasp_updater/self_update.dart';
 
 void main() {
+  // isNewVersionAvailable();
+  downloadLatestVersion();
   runApp(const MyApp());
 }
 
