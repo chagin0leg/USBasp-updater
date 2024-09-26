@@ -37,11 +37,10 @@ jobs:
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        name: ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
+        name: ${{ github.ref_name }}
+        files: ".\\deploy\\USBasp updater.exe"
         body: |
-          Commits in this release:
-          ${{ steps.get_commits.outputs.commits }}
-        files: ".\\deploy\\USBasp-updater.exe"
+          - Windows x64: [USBasp updater.exe](./USBasp%20updater.exe)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
