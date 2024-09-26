@@ -46,14 +46,18 @@ jobs:
     - name: Display project file tree
       run: tree /F /A
 
+    - name: Check if file exists
+      run: test -f ./deploy/usbasp_updater_win_x64.exe
+
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref_name }}
         name: ${{ github.ref_name }}
-        files: ".\\deploy\\usbasp_updater_win_x64.exe"
+        files: "./deploy/usbasp_updater_win_x64.exe"
         body: |
-          - Windows x64: [usbasp updater.exe](./usbasp%20updater.exe)
+          - Windows x64: [usbasp updater.exe](./usbasp_updater_win_x64.exe)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
