@@ -33,6 +33,10 @@ jobs:
     - name: Run Enigma VB Console
       run: .\deploy\enigmavbconsole.exe ".\\deploy\\USBasp-updater.evb"
 
+    - name: Extract tag name
+      id: extract_tag
+      run: echo "TAG_NAME=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
     - name: Get commit messages
       id: get_commits
       run: |
@@ -45,8 +49,8 @@ jobs:
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref }}
-        name: ${{ github.ref | split('/')[-1] }}
+        tag_name: ${{ env.TAG_NAME }}
+        name: ${{ env.TAG_NAME }}
         body: |
           Commits in this release:
           ${{ steps.get_commits.outputs.commits }}
