@@ -3,7 +3,7 @@ import 'package:xml/xml.dart';
 import 'package:args/args.dart';
 
 const String defaultReleaseDir = '../build/windows/x64/runner/Release';
-const String defaultXmlFilePath = 'USBasp-updater.evb';
+const String defaultXmlFilePath = '../deploy/USBasp-updater.evb';
 
 XmlNode createFileNode(File file) {
   print('Creating file node for: ${file.absolute.path}');
