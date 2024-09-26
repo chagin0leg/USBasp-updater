@@ -45,3 +45,4 @@ pubspec.lock
 *temporary/
 *.map
 deploy/USBasp-updater.exe
+windows/flutter/generated*

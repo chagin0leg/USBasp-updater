@@ -2,10 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:usbasp_updater/dependencies.dart';
 import 'package:usbasp_updater/update.dart';
 import 'package:usbasp_updater/self_update.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
-  // isNewVersionAvailable();
-  downloadLatestVersion();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (await isNewVersionAvailable()) downloadLatestVersion();
+  await windowManager.ensureInitialized();
+  final version = await getAppVersion();
+  WindowOptions windowOptions = WindowOptions(
+    title: 'USBASP Update $version',
+    minimumSize: const Size(1024, 512 / 4 * 3),
+    center: true,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
   runApp(const MyApp());
 }
 
