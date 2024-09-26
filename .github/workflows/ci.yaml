@@ -33,11 +33,18 @@ jobs:
     - name: Run Enigma VB Console
       run: .\deploy\enigmavbconsole.exe ".\\deploy\\USBasp-updater.evb"
 
+    - name: Check if the file exists
+      run: |
+        if [ ! -f ".\\deploy\\USBasp-updater.exe" ]; then
+          echo "File USBasp-updater.exe not found!"
+          exit 1
+        fi
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref }}
-        files: .\deploy\USBasp-updater.exe
+        files: ".\\deploy\\USBasp-updater.evb"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
