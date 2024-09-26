@@ -58,6 +58,6 @@ jobs:
         name: ${{ github.ref_name }}
         files: "./deploy/usbasp_updater_win_x64.exe"
         body: |
-          - Windows x64: [usbasp updater.exe](./usbasp_updater_win_x64.exe)
+          - Windows x64: [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
