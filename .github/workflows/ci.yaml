@@ -62,7 +62,7 @@ jobs:
     - name: Check *.zip file exists
       run: |
         test -f ./deploy/usbasp-updater.zip
-        mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.zip
+        mv ./deploy/usbasp-updater.zip ./deploy/usbasp_updater_win_x64.zip
         test -f ./deploy/usbasp_updater_win_x64.zip
 
     - name: Create Release
