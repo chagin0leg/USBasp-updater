@@ -72,8 +72,8 @@ jobs:
         tag_name: ${{ github.ref_name }}
         name: ${{ github.ref_name }}
         files: |
-          "./deploy/usbasp_updater_win_x64.exe"
-          "./deploy/usbasp_updater_win_x64.zip"
+          ./deploy/usbasp_updater_win_x64.exe
+          ./deploy/usbasp_updater_win_x64.zip
         body: |
           - Windows x64 (portable): [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
           - Windows x64 (archive): [usbasp_updater_win_x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.zip)
