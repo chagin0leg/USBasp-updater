@@ -59,12 +59,6 @@ jobs:
         mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.exe
         test -f ./deploy/usbasp_updater_win_x64.exe
 
-    - name: Check *.zip file exists
-      run: |
-        test -f ./deploy/usbasp-updater.zip
-        mv ./deploy/usbasp-updater.zip ./deploy/usbasp_updater_win_x64.zip
-        test -f ./deploy/usbasp_updater_win_x64.zip
-
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
@@ -73,9 +67,7 @@ jobs:
         name: ${{ github.ref_name }}
         files: |
           ./deploy/usbasp_updater_win_x64.exe
-          ./deploy/usbasp_updater_win_x64.zip
         body: |
-          - Windows x64 (portable): [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
-          - Windows x64 (archive): [usbasp_updater_win_x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.zip)
+          - Windows x64 Portable: [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

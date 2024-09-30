@@ -8,4 +8,5 @@ environment:
 dependencies:
   archive: ^3.6.1
   args: ^2.5.0
+  http: ^1.2.2
   xml: ^6.1.0
