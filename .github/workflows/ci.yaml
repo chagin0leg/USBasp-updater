@@ -54,10 +54,16 @@ jobs:
       run: tree /F /A
 
     - name: Check *.exe file exists
-      run: test -f ./deploy/usbasp_updater_win_x64.exe
+      run: |
+        test -f ./deploy/usbasp-updater.exe
+        mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.exe
+        test -f ./deploy/usbasp_updater_win_x64.exe
 
     - name: Check *.zip file exists
-      run: test -f ./deploy/usbasp_updater_win_x64.zip
+      run: |
+        test -f ./deploy/usbasp-updater.zip
+        mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.zip
+        test -f ./deploy/usbasp_updater_win_x64.zip
 
     - name: Create Release
       id: create_release
