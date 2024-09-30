@@ -34,27 +34,30 @@ jobs:
         restore-keys: |
           pub-cache-${{ runner.os }}-
 
-    - name: Update pubspec.yaml version
+    - name: Update pubspec.yaml and launcher versions
       run: |
         $tag_version = '${{ github.ref_name }}'
         (Get-Content pubspec.yaml) -replace '^version: .+', "version: $tag_version" | Set-Content pubspec.yaml
+        (Get-Content deploy/run_app.dart) -replace '^const String version = .+', "const String version = '$tag_version';" | Set-Content deploy/run_app.dart
       shell: pwsh
       
     - name: Build Flutter Windows Release
       run: flutter build windows --release
 
-    - name: Run Dart script
-      run: dart .\deploy\update_evb.dart --dir=".\\build\\windows\\x64\\runner\\Release" --xml=".\\deploy\\USBasp-updater.evb"
-
-    - name: Run Enigma VB Console
-      run: .\deploy\enigmavbconsole.exe ".\\deploy\\USBasp-updater.evb"
+    - name: Compile *.exe and *.zip application packages 
+      run: |
+        cd deploy
+        dart run .\deploy\deploy.dart ".\\build\\windows\\x64\\runner\\Release"
+        cd ..
 
     - name: Display project file tree
       run: tree /F /A
 
-    - name: Check if file exists
+    - name: Check *.exe file exists
       run: test -f ./deploy/usbasp_updater_win_x64.exe
 
+    - name: Check *.zip file exists
+      run: test -f ./deploy/usbasp_updater_win_x64.zip
 
     - name: Create Release
       id: create_release
@@ -62,8 +65,11 @@ jobs:
       with:
         tag_name: ${{ github.ref_name }}
         name: ${{ github.ref_name }}
-        files: "./deploy/usbasp_updater_win_x64.exe"
+        files: |
+          "./deploy/usbasp_updater_win_x64.exe"
+          "./deploy/usbasp_updater_win_x64.zip"
         body: |
-          - Windows x64: [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
+          - Windows x64 (portable): [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
+          - Windows x64 (archive): [usbasp_updater_win_x64.zip](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.zip)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
