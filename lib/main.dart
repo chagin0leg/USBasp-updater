@@ -1,58 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:usbasp_updater/dependencies.dart';
 import 'package:usbasp_updater/update.dart';
-import 'package:usbasp_updater/self_update.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await windowManager.ensureInitialized();
-  runApp(const MaterialApp(home: UpdatePage()));
-}
-
-class UpdatePage extends StatefulWidget {
-  const UpdatePage({super.key});
-  @override
-  _UpdateCheckPageState createState() => _UpdateCheckPageState();
-}
-
-class _UpdateCheckPageState extends State<UpdatePage> {
-  @override
-  void initState() {
-    super.initState();
-    _checkForUpdate();
-  }
-
-  Future<void> _checkForUpdate() async {
-    String vNext = await getLatestVersion();
-    String vCurr = await getAppVersion();
-    if (await isNewVersionAvailable()) {
-      if (true ==
-          await showDialog<bool>(
-              context: context,
-              builder: (context) => AlertDialog(
-                      title: Text('Доступно обновление версии $vCurr → $vNext'),
-                      content: const Text('Выполнить обновление сейчас?'),
-                      actions: [
-                        TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: const Text('Нет')),
-                        TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: const Text('Да')),
-                      ]))) await downloadLatestVersion();
-    }
-    WindowOptions windowOptions = WindowOptions(
-        minimumSize: const Size(1024, 512 / 4 * 3),
-        title: 'USBASP Update $vCurr');
-    await windowManager.waitUntilReadyToShow(windowOptions, () async {});
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const MainAppPage()));
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator()));
+  runApp(const MaterialApp(home: MainAppPage()));
 }
 
 class MainAppPage extends StatefulWidget {
@@ -69,6 +24,20 @@ class _MainAppPageState extends State<MainAppPage> {
 
   List<Map<String, bool>> componentStates = List.generate(components.length,
       (index) => {'isDownloaded': false, 'isUnzipped': false});
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeWindow(); // Вызов асинхронной инициализации окна
+  }
+
+  Future<void> _initializeWindow() async {
+    final version = (await PackageInfo.fromPlatform()).version;
+    WindowOptions windowOptions = WindowOptions(
+        minimumSize: const Size(1024, 512 / 4 * 3),
+        title: 'USBASP Update $version');
+    await windowManager.waitUntilReadyToShow(windowOptions, () async {});
+  }
 
   void updateComponentState(int index, bool isDownloaded, bool isUnzipped) {
     WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {
