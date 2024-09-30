@@ -46,3 +46,5 @@ pubspec.lock
 *.map
 deploy/USBasp-updater.exe
 windows/flutter/generated*
+deploy/*.zip
+deploy/*.exe
