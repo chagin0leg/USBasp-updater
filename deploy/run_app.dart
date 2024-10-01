@@ -1,15 +1,14 @@
-import 'dart:async';
+// ignore_for_file: avoid_print
+
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:archive/archive_io.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
+import 'dart:async';
 import 'dart:convert';
 import 'embedded_data.dart';
+import 'package:archive/archive.dart';
 
 const String version = '0.0.0';
 const String repo = 'https://github.com/chagin0leg/USBasp-updater/';
-const String url = repo + 'releases/latest/download/usbasp_updater_win_x64.exe';
+const String url = '${repo}releases/latest/download/usbasp_updater_win_x64.exe';
 
 void main() async {
   if (await isNewVersionAvailable()) {
@@ -20,12 +19,12 @@ void main() async {
     print('\nThe update has not been confirmed. Continue execution...');
   }
 
-  final zipData = Uint8List.fromList(embeddedZipData);
-  final archive = ZipDecoder().decodeBytes(zipData);
+  final tar = XZDecoder().decodeBytes(base64Decode(applicationData));
+  final archive = TarDecoder().decodeBytes(tar);
   final tempDir = Directory.systemTemp.createTempSync('flutter_app_');
 
   for (final file in archive) {
-    final filePath = tempDir.path + '/' + file.name;
+    final filePath = '${tempDir.path}/${file.name}';
     if (file.isFile) {
       final outFile = File(filePath);
       await outFile.create(recursive: true);
@@ -39,7 +38,7 @@ void main() async {
 
 Future<bool> waitingConfirm({double counter = 9.9}) async {
   final c = Completer<bool>();
-  final t = Timer.periodic(Duration(milliseconds: 100), (timer) {
+  final t = Timer.periodic(const Duration(milliseconds: 100), (timer) {
     stdout.write('\rUpdate is available! Update now? ');
     stdout.write('${counter.toStringAsFixed(1)}s [Y/n] ');
     if ((counter -= 0.1) < 0) c.complete(false);
@@ -50,14 +49,20 @@ Future<bool> waitingConfirm({double counter = 9.9}) async {
 }
 
 Future<void> downloadLatestVersion() async {
-  final response = await http.get(Uri.parse(url));
+  final httpClient = HttpClient();
 
-  if (response.statusCode == 200) {
-    final oldFile = Platform.resolvedExecutable;
-    final tempDir = (Directory.systemTemp).path;
-    final newFile = File('$tempDir\\${path.basename(url)}');
-    final batFile = File('${tempDir}\\update_version.bat');
-    final String command = '''
+  try {
+    final uri = Uri.parse(url);
+    final request = await httpClient.getUrl(uri);
+    final response = await request.close();
+
+    if (response.statusCode == 200) {
+      final oldFile = Platform.resolvedExecutable;
+      final tempDir = Directory.systemTemp.path;
+      final fileName = url.split('/').last; // Извлекаем имя файла из URL
+      final newFile = File('$tempDir\\$fileName');
+      final batFile = File('$tempDir\\update_version.bat');
+      final String command = '''
         @echo off
         ping 127.0.0.1 -n 5 > nul
         if exist "$oldFile" (
@@ -65,36 +70,74 @@ Future<void> downloadLatestVersion() async {
         )
         move "${newFile.path}" "$oldFile"
         start "" "$oldFile"
-    ''';
+      ''';
 
-    print('Save temporary application file');
-    await newFile.writeAsBytes(response.bodyBytes);
-    print('Create and launch update script');
-    await batFile.writeAsString(command);
-    await Process.start(batFile.path, [], runInShell: true);
-    print('Restart application! Goodbye.. (っ╥╯﹏╰╥c)');
+      print('Save temporary application file');
+      final bytes = await consolidateHttpResponse(response);
+      await newFile.writeAsBytes(bytes);
 
-    exit(0);
-  } else {
-    throw Exception('Не удалось скачать последнюю версию.');
+      print('Create and launch update script');
+      await batFile.writeAsString(command);
+      await Process.start(batFile.path, [], runInShell: true);
+
+      print('Restart application! Goodbye.. (っ╥╯﹏╰╥c)');
+      exit(0);
+    } else {
+      throw Exception(
+          'Не удалось скачать последнюю версию. Код ошибки: ${response.statusCode}');
+    }
+  } finally {
+    httpClient.close();
   }
+}
+
+Future<List<int>> consolidateHttpResponse(HttpClientResponse response) {
+  final completer = Completer<List<int>>();
+  final contents = <int>[];
+
+  response.listen(
+    (data) => contents.addAll(data),
+    onDone: () => completer.complete(contents),
+    onError: (e) => completer.completeError(e),
+    cancelOnError: true,
+  );
+
+  return completer.future;
 }
 
 const getTag = 'api.github.com/repos/chagin0leg/USBasp-updater/releases/latest';
 Future<String> getLatestVersion() async {
   print('Checking for updates...');
-  final response = await http.get(Uri.parse('https://' + getTag));
-  if (response.statusCode == 200) {
-    final data = json.decode(response.body);
-    print("The latest Application Version is ${data['tag_name']}");
-    return data['tag_name'];
-  } else {
-    throw Exception('Cannot get the last version [${response.statusCode}].');
+  final httpClient = HttpClient();
+
+  try {
+    final uri = Uri.parse('https://$getTag');
+    final request = await httpClient.getUrl(uri);
+    final response = await request.close();
+
+    if (response.statusCode == 200) {
+      final responseBody = await response.transform(const Utf8Decoder()).join();
+
+      final tagRegex = RegExp(r'"tag_name"\s*:\s*"([^"]+)"');
+      final match = tagRegex.firstMatch(responseBody);
+
+      if (match != null) {
+        final tagName = match.group(1);
+        print("The latest Application Version is $tagName");
+        return tagName ?? '';
+      } else {
+        throw Exception('Cannot find tag_name in the response.');
+      }
+    } else {
+      throw Exception('Cannot get the last version [${response.statusCode}].');
+    }
+  } finally {
+    httpClient.close();
   }
 }
 
 extension VersionParsing on String {
-  List<int> toInt() => this.split('.').map(int.parse).toList();
+  List<int> toInt() => split('.').map(int.parse).toList();
 }
 
 Future<bool> isNewVersionAvailable() async {
