@@ -1,15 +1,15 @@
-### Project Name: Serial Number Generator and AVR Firmware Uploader
+# Serial Number Generator and USB-ASP Firmware Uploader
 
 ---
 
-#### Overview
-This project provides a Flutter-based desktop application for generating, formatting, and uploading AVR firmware, specifically targeting devices with `USBasp` programmers. The application is designed to assist users in generating unique serial numbers for their devices, compiling the firmware using `avr-gcc`, and flashing the firmware using `avrdude`. The app also offers an intuitive user interface, including progress indicators for compilation and flashing, as well as feedback on the success or failure of the operations.
+## Overview
+This project provides a Flutter-based desktop application for generating, building, and uploading AVR firmware, specifically targeting devices with `USBasp` programmers. The application is designed to assist users in generating unique serial numbers for their devices, compiling the firmware using `avr-gcc`, and flashing the firmware using `avrdude`. The app also offers an intuitive user interface, including progress indicators for compilation and flashing, as well as feedback on the success or failure of the operations.
 
 ![alt text](screenshot.png)
 
 ---
 
-#### Features
+## Features
 1. **Serial Number Generation & Formatting**: 
    - Automatically generate 32-character alphanumeric serial numbers.
    - Supports custom serial number input with automatic formatting (inserting hyphens at appropriate positions).
@@ -29,7 +29,7 @@ This project provides a Flutter-based desktop application for generating, format
    
 ---
 
-#### Usage
+## Usage
 
 1. **Download and Unpack all Dependencies**:
    - Download next to each dependency and it will be saved to your device
@@ -51,7 +51,7 @@ This project provides a Flutter-based desktop application for generating, format
 
 ---
 
-#### Installation
+## Installation
 
 1. **Clone the Repository**:
    ```bash
@@ -67,7 +67,7 @@ This project provides a Flutter-based desktop application for generating, format
 
 ---
 
-#### Project Structure
+## Project Structure
 
 - **upload.dart**: This file contains the core logic for serial number formatting, firmware compilation, and flashing.
 - **dependencies.dart**: Lists and imports necessary dependencies for the project.
@@ -77,6 +77,6 @@ This project provides a Flutter-based desktop application for generating, format
 
 ---
 
-#### Notes
+## Notes
 
 - Always verify the correctness of the connected USBasp programmer to avoid damage to your AVR device.
