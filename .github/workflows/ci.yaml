@@ -11,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Cache Flutter SDK
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/flutter
         key: flutter-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}-${{ hashFiles('flutter-version') }}
@@ -24,10 +24,10 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.24.3'
+        flutter-version: '3.38.0'
 
     - name: Cache pub dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.pub-cache
         key: pub-cache-${{ runner.os }}-${{ hashFiles('pubspec.yaml') }}
@@ -42,7 +42,7 @@ jobs:
       shell: pwsh
       
     - name: Build Flutter Windows Release
-      run: flutter build windows --release
+      run: flutter build windows --release --obfuscate --split-debug-info=./build/symbols
 
     - name: Compile *.exe and *.zip application packages 
       run: |
