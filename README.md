@@ -5,7 +5,7 @@
 ## Overview
 This project provides a Flutter-based desktop application for generating, building, and uploading AVR firmware, specifically targeting devices with `USBasp` programmers. The application is designed to assist users in generating unique serial numbers for their devices, compiling the firmware using `avr-gcc`, and flashing the firmware using `avrdude`. The app also offers an intuitive user interface, including progress indicators for compilation and flashing, as well as feedback on the success or failure of the operations.
 
-![main_page_screenshot](https://github.com/chagin0leg/USBasp-updater/releases/latest/download/main_page_screenshot.jpg)
+![main_page_screenshot](https://github.com/chagin0leg/USBasp-updater/releases/latest/download/main_page_screenshot.png)
 
 ---
 
