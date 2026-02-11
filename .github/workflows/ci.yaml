@@ -59,6 +59,25 @@ jobs:
         mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.exe
         test -f ./deploy/usbasp_updater_win_x64.exe
 
+    # На hosted runner GUI может быть недоступен — шаг помечен continue-on-error
+    - name: Try to capture screenshot
+      id: screenshot
+      continue-on-error: true
+      run: |
+        $exe = ".\deploy\usbasp_updater_win_x64.exe"
+        $proc = Start-Process -FilePath $exe -PassThru
+        Start-Sleep -Seconds 5
+        Add-Type -AssemblyName System.Windows.Forms
+        Add-Type -AssemblyName System.Drawing
+        $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+        $bitmap = New-Object System.Drawing.Bitmap($screen.Width, $screen.Height)
+        $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+        $graphics.CopyFromScreen($screen.Location, [System.Drawing.Point]::Empty, $screen.Size)
+        $bitmap.Save("$PWD\deploy\screenshot.png", [System.Drawing.Imaging.ImageFormat]::Png)
+        $graphics.Dispose(); $bitmap.Dispose()
+        if ($proc -and !$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+      shell: pwsh
+
     - name: Create Release
       id: create_release
       uses: softprops/action-gh-release@v1
@@ -71,3 +90,9 @@ jobs:
           - Windows x64 Portable: [usbasp_updater_win_x64.exe](https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/usbasp_updater_win_x64.exe)
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload screenshot to release
+      if: steps.screenshot.outcome == 'success'
+      run: gh release upload ${{ github.ref_name }} ./deploy/screenshot.png --clobber
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
