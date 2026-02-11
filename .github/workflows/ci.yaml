@@ -59,23 +59,40 @@ jobs:
         mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.exe
         test -f ./deploy/usbasp_updater_win_x64.exe
 
-    # На hosted runner GUI может быть недоступен — шаг помечен continue-on-error
-    - name: Try to capture screenshot
+    # Фон deploy/background.jpg (ч/б пополам) на весь экран, скрин приложения, обрезка краёв
+    - name: Try to capture main page screenshot
       id: screenshot
       continue-on-error: true
       run: |
+        Add-Type -AssemblyName System.Windows.Forms
+        Add-Type -AssemblyName System.Drawing
+        $showDef = '[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);'
+        $show = Add-Type -MemberDefinition $showDef -Name Win32SW -Namespace Native -PassThru
+        $bgPath = "$PWD\deploy\background.jpg"
+        $viewer = Start-Process $bgPath -PassThru
+        for ($i = 0; $i -lt 20; $i++) {
+          $viewer.Refresh()
+          if ($viewer.MainWindowHandle -ne [IntPtr]::Zero) { $show::ShowWindow($viewer.MainWindowHandle, 3); break }
+          Start-Sleep -Milliseconds 500
+        }
+        Start-Sleep -Seconds 2
         $exe = ".\deploy\usbasp_updater_win_x64.exe"
         $proc = Start-Process -FilePath $exe -PassThru
         Start-Sleep -Seconds 5
-        Add-Type -AssemblyName System.Windows.Forms
-        Add-Type -AssemblyName System.Drawing
         $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
         $bitmap = New-Object System.Drawing.Bitmap($screen.Width, $screen.Height)
-        $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
-        $graphics.CopyFromScreen($screen.Location, [System.Drawing.Point]::Empty, $screen.Size)
-        $bitmap.Save("$PWD\deploy\screenshot.png", [System.Drawing.Imaging.ImageFormat]::Png)
-        $graphics.Dispose(); $bitmap.Dispose()
+        $g = [System.Drawing.Graphics]::FromImage($bitmap)
+        $g.CopyFromScreen($screen.Location, [System.Drawing.Point]::Empty, $screen.Size)
+        $g.Dispose()
+        $margin = 0.12
+        $mx = [int]($bitmap.Width * $margin); $my = [int]($bitmap.Height * $margin)
+        $w = $bitmap.Width - 2*$mx; $h = $bitmap.Height - 2*$my
+        $rect = [System.Drawing.Rectangle]::new($mx, $my, $w, $h)
+        $cropped = $bitmap.Clone($rect, $bitmap.PixelFormat)
+        $cropped.Save("$PWD\deploy\main_page_screenshot.png", [System.Drawing.Imaging.ImageFormat]::Png)
+        $bitmap.Dispose(); $cropped.Dispose()
         if ($proc -and !$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
+        if ($viewer -and !$viewer.HasExited) { Stop-Process -Id $viewer.Id -Force -ErrorAction SilentlyContinue }
       shell: pwsh
 
     - name: Create Release
@@ -93,6 +110,6 @@ jobs:
 
     - name: Upload screenshot to release
       if: steps.screenshot.outcome == 'success'
-      run: gh release upload ${{ github.ref_name }} ./deploy/screenshot.png --clobber
+      run: gh release upload ${{ github.ref_name }} ./deploy/main_page_screenshot.png --clobber
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
