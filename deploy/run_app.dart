@@ -10,8 +10,13 @@ const String version = '0.0.0';
 const String repo = 'https://github.com/chagin0leg/USBasp-updater/';
 const String url = '${repo}releases/latest/download/usbasp_updater_win_x64.exe';
 
+final _appDir = Directory('${Directory.systemTemp.path}/usbasp_updater_app');
+
+bool get _autoUpdateEnabled =>
+    File('${_appDir.path}/temporary/usbasp_updater_auto_update').existsSync();
+
 void main() async {
-  if (await isNewVersionAvailable()) {
+  if (_autoUpdateEnabled && await isNewVersionAvailable()) {
     if (await waitingConfirm()) {
       print('Update confirmed! Program updates has been  started...');
       await downloadLatestVersion();
@@ -21,10 +26,17 @@ void main() async {
 
   final tar = XZDecoder().decodeBytes(base64Decode(applicationData));
   final archive = TarDecoder().decodeBytes(tar);
-  final tempDir = Directory.systemTemp.createTempSync('flutter_app_');
+  if (_appDir.existsSync()) {
+    for (final e in _appDir.listSync()) {
+      final name = e.path.split(Platform.pathSeparator).last;
+      if (e is Directory && name == 'temporary') continue;
+      e.deleteSync(recursive: true);
+    }
+  }
+  _appDir.createSync(recursive: true);
 
   for (final file in archive) {
-    final filePath = '${tempDir.path}/${file.name}';
+    final filePath = '${_appDir.path}/${file.name}';
     if (file.isFile) {
       final outFile = File(filePath);
       await outFile.create(recursive: true);
@@ -32,8 +44,8 @@ void main() async {
     }
   }
 
-  final exe = '${tempDir.path}/USBasp-updater.exe';
-  Process.start('cmd', ['/c', 'start /b $exe'], workingDirectory: tempDir.path);
+  final exe = '${_appDir.path}/USBasp-updater.exe';
+  Process.start('cmd', ['/c', 'start /b $exe'], workingDirectory: _appDir.path);
 }
 
 Future<bool> waitingConfirm({double counter = 9.9}) async {
