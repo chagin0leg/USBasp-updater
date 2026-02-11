@@ -515,7 +515,7 @@ class ToolBarField extends StatefulWidget {
 class _ToolBarFieldState extends State<ToolBarField> {
   var _progress = 0, _visibleProgress = 0, _updateStarted = false;
   DateTime? _progressShownAt;
-  addProgress({required int value}) => setProgress(value: _progress + value);
+  void addProgress({required int value}) => setProgress(value: _progress + value);
 
   void setProgress({required int value}) {
     final v = max(min(value, 100), 0);
