@@ -59,61 +59,26 @@ jobs:
         mv ./deploy/usbasp-updater.exe ./deploy/usbasp_updater_win_x64.exe
         test -f ./deploy/usbasp_updater_win_x64.exe
 
-    # Фон deploy/background.jpg (ч/б пополам) на весь экран, скрин приложения, обрезка краёв
+    # Свернуть все окна (приложение не сворачивается), скрин всего экрана → main_page_screenshot.png
     - name: Try to capture main page screenshot
       id: screenshot
       continue-on-error: true
       run: |
         Add-Type -AssemblyName System.Windows.Forms
         Add-Type -AssemblyName System.Drawing
-        $showDef = '[DllImport("user32.dll")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);'
-        $show = Add-Type -MemberDefinition $showDef -Name Win32SW -Namespace Native -PassThru
-        $bgPath = "$PWD\deploy\background.jpg"
-        $viewer = Start-Process $bgPath -PassThru
-        for ($i = 0; $i -lt 20; $i++) {
-          $viewer.Refresh()
-          if ($viewer.MainWindowHandle -ne [IntPtr]::Zero) { $show::ShowWindow($viewer.MainWindowHandle, 3); break }
-          Start-Sleep -Milliseconds 500
-        }
-        Start-Sleep -Seconds 2
-        Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices;
-        [StructLayout(LayoutKind.Sequential)] public struct RECT { public int Left; public int Top; public int Right; public int Bottom; }
-        public class Win32Rect { [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect); }'
         $exe = ".\deploy\usbasp_updater_win_x64.exe"
         $proc = Start-Process -FilePath $exe -PassThru
         Start-Sleep -Seconds 5
-        $hwnd = [IntPtr]::Zero
-        for ($i = 0; $i -lt 30; $i++) {
-          $proc.Refresh()
-          if ($proc.MainWindowHandle -ne [IntPtr]::Zero) { $hwnd = $proc.MainWindowHandle; break }
-          Start-Sleep -Milliseconds 500
-        }
+        (New-Object -ComObject Shell.Application).MinimizeAll()
+        Start-Sleep -Seconds 2
         $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-        if ($hwnd -ne [IntPtr]::Zero) {
-          $r = New-Object RECT
-          [Win32Rect]::GetWindowRect($hwnd, [ref]$r) | Out-Null
-          $pad = 8
-          $x = [Math]::Max(0, $r.Left - $pad); $y = [Math]::Max(0, $r.Top - $pad)
-          $w = [Math]::Min($screen.Width - $x, $r.Right - $r.Left + 2*$pad)
-          $h = [Math]::Min($screen.Height - $y, $r.Bottom - $r.Top + 2*$pad)
-          $bitmap = New-Object System.Drawing.Bitmap($w, $h)
-          $g = [System.Drawing.Graphics]::FromImage($bitmap)
-          $g.CopyFromScreen($x, $y, 0, 0, [System.Drawing.Size]::new($w, $h))
-          $g.Dispose()
-        } else {
-          $full = New-Object System.Drawing.Bitmap($screen.Width, $screen.Height)
-          $g = [System.Drawing.Graphics]::FromImage($full)
-          $g.CopyFromScreen($screen.Location, [System.Drawing.Point]::Empty, $screen.Size)
-          $g.Dispose()
-          $w = [int]($full.Width * 0.88); $h = [int]($full.Height * 0.80)
-          $mx = [int](($full.Width - $w) / 2); $my = [int](($full.Height - $h) / 2)
-          $bitmap = $full.Clone([System.Drawing.Rectangle]::new($mx, $my, $w, $h), $full.PixelFormat)
-          $full.Dispose()
-        }
+        $bitmap = New-Object System.Drawing.Bitmap($screen.Width, $screen.Height)
+        $g = [System.Drawing.Graphics]::FromImage($bitmap)
+        $g.CopyFromScreen($screen.Location, [System.Drawing.Point]::Empty, $screen.Size)
+        $g.Dispose()
         $bitmap.Save("$PWD\deploy\main_page_screenshot.png", [System.Drawing.Imaging.ImageFormat]::Png)
         $bitmap.Dispose()
         if ($proc -and !$proc.HasExited) { Stop-Process -Id $proc.Id -Force -ErrorAction SilentlyContinue }
-        if ($viewer -and !$viewer.HasExited) { Stop-Process -Id $viewer.Id -Force -ErrorAction SilentlyContinue }
       shell: pwsh
 
     - name: Create Release
